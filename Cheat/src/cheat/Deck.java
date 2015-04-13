@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ProgramAssignment1;
+package cheat;
 
 import java.util.Collections;
 import java.util.LinkedList;
