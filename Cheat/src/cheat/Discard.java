@@ -5,13 +5,15 @@
  */
 package cheat;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author pbm104
  */
 public class Discard {
     //cards in discard
-    Card[] discardCards;
+    ArrayList<Card> discardCards;
     // int representing last player
     int lastPlayer;
     // boolean representing whther last player lied
@@ -32,26 +34,28 @@ public class Discard {
     }
     /**
      * returns the cards in DiscardCards
+     * @return 
      */
-    public Card[] getDiscardCards(){
+    public ArrayList<Card> getDiscardCards(){
         return discardCards;
     }
     /**
      * return the number of cards in discardCards
      */
     public int discardSize(){
-        return discardCards.length;
+        return discardCards.size();
     }
     /**
      * add cards to discardCards
+     * @param cards
     */
-    public void addCardsToDiscard(Card[] cards){
-        
+    public void addCardsToDiscard(ArrayList<Card> cards){
+        discardCards.addAll(cards);
     }
     /**
      * set cards in Discards to be empty
      */
     public void emptyDiscard(){
-        
+        discardCards = new ArrayList<>();
     }
 }

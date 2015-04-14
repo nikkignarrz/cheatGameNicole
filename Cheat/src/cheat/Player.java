@@ -12,10 +12,12 @@ package cheat;
 public class Player {
     String name;
     Hand hand;
+    boolean isHuman;
     
-    public Player(String name, Hand hand){
+    public Player(String name, Hand hand, boolean isHuman){
     this.name = name;
     this.hand = hand;
+    this.isHuman = isHuman;
     }
     public String getName(){
         return name;

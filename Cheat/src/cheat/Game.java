@@ -16,14 +16,34 @@ public class Game {
     GameWindow gw;
     
     /**
-     * Gets names for each player
-     * Creates 4 hands from a full set of cards
-     * Creates 4 players and stores them in players
+     * Gets names for each player       
+     * Creates 4 hands from a full set of cards         .
+     * Creates 4 players and stores them in players     .
      * sets discard to empty
      * starts game loop
      */
     public Game(){
+        players = new Player[4];
+        //create deck for game
+        Deck deck = new Deck();
+        // create temp storage for names
+        String[] name = {"Human", "pc1","pc2","pc3"};
+        //TODO: GET NAMES
         
+        //Create temporary hand storage
+        Hand tempHand;
+        //Create Card array
+        Card[] cards = new Card[13];
+        boolean[] isHuman = {true, false, false, false};
+        //create 4 hands of size 13(inner loop) and store them to 4 players(outer loop)
+        for(int i = 0; i <4; i++){
+            for(int j = 0; j<13; j++){
+                cards[j] = deck.popCard();
+            }
+            tempHand = new Hand(cards);
+            players[i] = new Player(name[i], tempHand,isHuman[i]);
+        }
+ //       loop();
     }
     /**
      * loop until game is won or quit
@@ -32,8 +52,11 @@ public class Game {
      *          call playerTurn()
      *          render()
      */
-    public void loop(){
-        
+    private void loop(){
+        while(!checkWinCondition()){
+            playerTurn(players[round%4]);
+            render();
+        }
     }
     /**
      * check if player is human
@@ -42,7 +65,11 @@ public class Game {
      * @param player 
      */
     public void playerTurn(Player player){
-        
+        if(player.isHuman){
+            humanPlayerTurn(player);
+        }else{
+            computerPlayerTurn(player);
+        }
     }
     /**
      * wait for input from player
@@ -51,7 +78,7 @@ public class Game {
      * then call render()
      * Repeat these steps until playCards has been selected
      */
-    public void humanPlayerTurn(){
+    public void humanPlayerTurn(Player player){
         
     }
     /**
@@ -60,7 +87,7 @@ public class Game {
      * do the decided actions
      * return
      */
-    public void computerPlayerTurn(){
+    public void computerPlayerTurn(Player player){
         
     }
     /**
@@ -91,5 +118,9 @@ public class Game {
      */
     public void render(){
         
+    }
+
+    private boolean checkWinCondition() {
+        return true;
     }
 }

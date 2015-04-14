@@ -5,18 +5,22 @@
  */
 package cheat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  *
  * @author Patrick
  */
 public class Hand {
-    Card[] cards;
+    ArrayList<Card> cards;
     /**
      * creates a hand with the provided cards
      * @param cards 
      */
-    public Hand(Card[] cards){
-        this.cards = cards;
+    public Hand(Card[] card){
+        this.cards = new ArrayList<>();
+        this.cards.addAll(Arrays.asList(card));
     }
     /**
      * creates an empty hand
@@ -28,7 +32,7 @@ public class Hand {
      * returns the cards in the hand
      * @return 
      */
-    public Card[] getCards(){
+    public ArrayList getCards(){
         return cards;
     }
     /**
@@ -49,6 +53,6 @@ public class Hand {
      * @return 
      */
     public int size(){
-        return cards.length;
+        return cards.size();
     }
 }
