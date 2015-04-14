@@ -143,6 +143,8 @@ public class GameWindow extends javax.swing.JFrame {
             cardButtons[i] = new JButton();
             cardButtons[i].setLocation(100, 100);
             cardButtons[i].setVisible(true);
+            cardButtons[i].setSize(71, 96);
+            cardButtons[i].setText(Integer.toString(i));
            // cardButtons[i].setIcon(playerCards.get(i).);
             add(cardButtons[i]);
             pack();

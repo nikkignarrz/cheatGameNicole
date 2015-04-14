@@ -12,13 +12,13 @@ package cheat;
 public class Card {
     private String suit;
     private int value;
-    private int imageValue;
+    private String imageValue;
 
     /**
      * @param suit
      * @param value
      */
-    public Card(String suit, int value, int imageValue){
+    public Card(String suit, int value, String imageValue){
         this.suit = suit;
         this.value = value;
         this.imageValue = imageValue;
@@ -51,14 +51,14 @@ public class Card {
     /**
      * @return the imageValue
      */
-    public int getImageValue() {
+    public String getImageValue() {
         return imageValue;
     }
 
     /**
      * @param imageValue the imageValue to set
      */
-    public void setImageValue(int imageValue) {
+    public void setImageValue(String imageValue) {
         this.imageValue = imageValue;
     }
     

@@ -20,16 +20,16 @@ public class Deck {
         String suit;
         for(int i =0; i < 4; i++){
             if (i == 0){
-                suit = "Spade";
-            }else if (i ==1){
                 suit = "Club";
+            }else if (i ==1){
+                suit = "Diamond";
             }else if (i ==2){
                 suit = "Heart";
             }else{
-                suit = "Diamond";
+                suit = "Spade";
             }
-            for(int j = 1; j <14; j ++){
-                deck.add(new Card(suit,j,((i*13)+j)));
+            for(int j = 0; j <13; j ++){
+                deck.add(new Card(suit,j,"/images/" +  (j+(i*13)) + ".png"));
             }
         }
     }
