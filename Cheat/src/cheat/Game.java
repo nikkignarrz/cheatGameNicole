@@ -26,6 +26,8 @@ public class Game {
         players = new Player[4];
         //create deck for game
         Deck deck = new Deck();
+        //shuffle deck
+        deck.shuffle();
         // create temp storage for names
         String[] name = {"Human", "pc1","pc2","pc3"};
         //TODO: GET NAMES

@@ -32,7 +32,7 @@ public class Hand {
      * returns the cards in the hand
      * @return 
      */
-    public ArrayList getCards(){
+    public ArrayList<Card> getCards(){
         return cards;
     }
     /**

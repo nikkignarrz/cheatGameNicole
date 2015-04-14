@@ -29,7 +29,7 @@ public class Deck {
                 suit = "Spade";
             }
             for(int j = 0; j <13; j ++){
-                deck.add(new Card(suit,j,"/images/" +  (j+(i*13)) + ".png"));
+                deck.add(new Card(suit,j,"images/" +  (j+(i*13)) + ".png"));
             }
         }
     }

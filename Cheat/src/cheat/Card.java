@@ -13,6 +13,7 @@ public class Card {
     private String suit;
     private int value;
     private String imageValue;
+    private boolean selected;
 
     /**
      * @param suit
@@ -22,6 +23,7 @@ public class Card {
         this.suit = suit;
         this.value = value;
         this.imageValue = imageValue;
+        this.selected = false;
     }
     public String getSuit() {
         return suit;
@@ -61,6 +63,11 @@ public class Card {
     public void setImageValue(String imageValue) {
         this.imageValue = imageValue;
     }
+    public boolean getSelected() {
+        return selected;
+    }
     
-    
+        public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }
