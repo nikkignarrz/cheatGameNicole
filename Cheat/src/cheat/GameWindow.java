@@ -8,6 +8,7 @@ package cheat;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 /**
  *
@@ -18,10 +19,19 @@ public class GameWindow extends javax.swing.JFrame {
     /**
      * Creates new form GameWindow
      */
-    Game game;
-    ArrayList<JButton> cardButtons;
+    private Game game;
+    private ArrayList<JButton> cardButtons;
+    final int XCARDAREA = 1000;
+    final int XCARDSIZE = 71;
+    final int YCARDAREA = 550;
+    private ArrayList<JLabel> card1Labels;
+    private ArrayList<JLabel> card2Labels;
+    private ArrayList<JLabel> card3Labels;
     public GameWindow() {
         cardButtons = new ArrayList<JButton>();
+        card1Labels = new ArrayList<JLabel>();
+        card2Labels = new ArrayList<JLabel>();
+        card3Labels = new ArrayList<JLabel>();
         game = new Game();
         initComponents();
         displayCards();
@@ -38,6 +48,7 @@ public class GameWindow extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,55 +71,53 @@ public class GameWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(56, 1105, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                .addContainerGap(1000, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(720, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addGap(20, 20, 20))
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        remove(jButton1);
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void cardButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void cardButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        //GET SOURVE
         Object temp =evt.getSource();
-        System.out.println(temp.toString());
+        //GET PLAYER CARDS
         Player humanPlayer = game.players[0];
         Hand playerHand =humanPlayer.hand;
         ArrayList<Card> playerCards = playerHand.getCards();
+        //CHECK WHICH CARD WAS CLICKED
         for(int i = 0;  i < cardButtons.size(); i++){
             if(cardButtons.get(i).equals(temp)){
-                game.players[0].hand.getCards().get(i).setSelected(!playerCards.get(i).getSelected());
-                System.out.println("selected");
-                for (int j = 0; j < cardButtons.size(); j++){
-                    cardButtons.get(j).setVisible(false);
-                }
-                cardButtons.removeAll(cardButtons);
-                displayCards();
+                //SET CARD BOOLEAN TO SELECTED
+               game.players[0].hand.getCards().get(i).setSelected(!playerCards.get(i).getSelected());
+               //REDISPLAY CARDS
+               displayCards();
                revalidate();
-                repaint();
-                return;
+               repaint();
+               return;
             }
         }
     }
@@ -150,33 +159,150 @@ public class GameWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 
     private void displayCards() {
-        Player humanPlayer = game.players[0];
-        Hand playerHand =humanPlayer.hand;
-        ArrayList<Card> playerCards = playerHand.getCards();
- //       cardButtons = new JButton[playerCards.size()];
-        for(int i = 0; i < playerCards.size(); i++){
+        //ERASE OLD CARDS
+        //REMOVE BUTTONS FROM INTERFACE
+        for (int j = 0; j < cardButtons.size(); j++){
+            cardButtons.get(j).setVisible(false);
+        }
+        //REMOVE BUTTONS FROM ARRAYLIST
+        cardButtons.removeAll(cardButtons);
+        
+        //REMOVE LABELS FROM INTERFACE
+        //cp1
+         for (int j = 0; j < card1Labels.size(); j++){
+            card1Labels.get(j).setVisible(false);
+        }
+        //REMOVE LABELS FROM ARRAYLIST
+        card1Labels.removeAll(card1Labels);
+        //cp2
+        for (int j = 0; j < card2Labels.size(); j++){
+            card2Labels.get(j).setVisible(false);
+        }
+        //REMOVE LABELS FROM ARRAYLIST
+        card2Labels.removeAll(card2Labels);
+        //cp3
+         for (int j = 0; j < card3Labels.size(); j++){
+            card3Labels.get(j).setVisible(false);
+        }
+        //REMOVE LABELS FROM ARRAYLIST
+        card3Labels.removeAll(card3Labels);
+        //DISPLAY PLAYER HAND:
+        
+        //GET PLAYER CARDS TO DRAW
+        Player player = game.players[0];
+        Hand hand =player.hand;
+        ArrayList<Card> cards = hand.getCards();
+        
+        //SET XCARD START AND XCARD SPACING
+        int xCardStart;
+        int xCardSpace;
+        if(cards.size()*XCARDSIZE < XCARDAREA){
+            xCardStart = (XCARDAREA - (XCARDSIZE*cards.size()))/2;
+            xCardSpace = XCARDSIZE;
+        }else{
+            xCardSpace = (XCARDSIZE -(((XCARDSIZE*cards.size()-XCARDAREA)/cards.size())+1));
+            xCardStart = 10;
+        }
+        
+        //CREATE BUTTONS FOR PLAYER CARDS
+        for(int i = 0; i < cards.size(); i++){
             cardButtons.add(i, new JButton());
             cardButtons.get(i).addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     cardButtonActionPerformed(evt);
                 }
             });
-            if(playerCards.get(i).getSelected()){
-                System.out.println("MovedUp");
-                cardButtons.get(i).setLocation(200+(i*20), 650);
+            //IF CARD IS SELECTED MOVE IT UP OTHERWISE DRAW ON BOTTOM
+            if(cards.get(i).getSelected()){
+                cardButtons.get(i).setLocation(xCardStart+(i*xCardSpace), 650);
             }else{
-                cardButtons.get(i).setLocation(200+(i*20), 700);
+                cardButtons.get(i).setLocation(xCardStart+(i*xCardSpace), 700);
             }
-
+            //SET SETTINGS FOR BUTTON AND DISPLAY
             cardButtons.get(i).setVisible(true);
             cardButtons.get(i).setSize(71, 96);
-            cardButtons.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource(playerCards.get(i).getImageValue())));
-           // cardButtons[i].setIcon(playerCards.get(i).);
+            cardButtons.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource(cards.get(i).getImageValue())));
             add(cardButtons.get(i));
         }
-    // http://stackoverflow.com/questions/12367074/creating-dynamic-jlabels-and-jbuttons
+        //DISPLAY COMPUTERS 2 HAND
+        
+        player = game.players[2];
+        hand =player.hand;
+        cards = hand.getCards();
+        
+        //SET XCARD START AND XCARD SPACING
+        if(cards.size()*XCARDSIZE < XCARDAREA){
+            xCardStart = (XCARDAREA - (XCARDSIZE*cards.size()))/2;
+            xCardSpace = XCARDSIZE;
+        }else{
+            xCardSpace = (XCARDSIZE -(((XCARDSIZE*cards.size()-XCARDAREA)/cards.size())+1));
+            xCardStart = 10;
+        }
+        
+        //CREATE BUTTONS FOR PLAYER CARDS
+        for(int i = 0; i < cards.size(); i++){
+            card2Labels.add(i, new JLabel());
+            //SET SETTINGS FOR BUTTON AND DISPLAY
+            card2Labels.get(i).setLocation(xCardStart+(i*xCardSpace), 1);
+            card2Labels.get(i).setSize(71, 96);
+            card2Labels.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("images/b1fv.png")));
+            card2Labels.get(i).setVisible(true);
+            add(card2Labels.get(i));
+        }
+        
+        //DRAW COMPUTER 1 CARDS
+        player = game.players[1];
+        hand =player.hand;
+        cards = hand.getCards();
+        int yCardStart;
+        int yCardSpace;
+        
+        //SET XCARD START AND XCARD SPACING
+        if(cards.size()*XCARDSIZE < YCARDAREA){
+            yCardStart = (YCARDAREA - (XCARDSIZE*cards.size()))/2;
+            yCardSpace = XCARDSIZE;
+        }else{
+            yCardSpace = (XCARDSIZE -(((XCARDSIZE*cards.size()-YCARDAREA)/cards.size())+1));
+            yCardStart = 10;
+        }
+        
+        //CREATE BUTTONS FOR PLAYER CARDS
+        for(int i = 0; i < cards.size(); i++){
+            card1Labels.add(i, new JLabel());
+            //SET SETTINGS FOR BUTTON AND DISPLAY
+            card1Labels.get(i).setLocation(900,90+ yCardStart+(i*yCardSpace));
+            card1Labels.get(i).setSize(96, 71);
+            card1Labels.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("images/b1fh.png")));
+            card1Labels.get(i).setVisible(true);
+            add(card1Labels.get(i));
+        }
+        //DRAW COMPUTER 3 CARDS
+        player = game.players[1];
+        hand =player.hand;
+        cards = hand.getCards();
+        
+        //SET XCARD START AND XCARD SPACING
+        if(cards.size()*XCARDSIZE < YCARDAREA){
+            yCardStart = (YCARDAREA - (XCARDSIZE*cards.size()))/2;
+            yCardSpace = XCARDSIZE;
+        }else{
+            yCardSpace = (XCARDSIZE -(((XCARDSIZE*cards.size()-YCARDAREA)/cards.size())+1));
+            yCardStart = 10;
+        }
+        
+        //CREATE BUTTONS FOR PLAYER CARDS
+        for(int i = 0; i < cards.size(); i++){
+            card3Labels.add(i, new JLabel());
+            //SET SETTINGS FOR BUTTON AND DISPLAY
+            card3Labels.get(i).setLocation(1,90+ yCardStart+(i*yCardSpace));
+            card3Labels.get(i).setSize(96,71);
+            card3Labels.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("images/b1fh.png")));
+            card3Labels.get(i).setVisible(true);
+            add(card3Labels.get(i));
+        }
     }
 }
