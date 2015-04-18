@@ -8,8 +8,6 @@ package cheat;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -38,6 +36,7 @@ public class GameWindow extends javax.swing.JFrame {
     private String[] roundString = {"Two","Three","Four","Five","Six","Seven",
                             "Eight","Nine","Ten","Jack","Queen","King","Ace"};
     public GameWindow() {
+        //INITIALIZE CLASS VARIABLES
         cardButtons = new ArrayList<JButton>();
         card1Labels = new ArrayList<JLabel>();
         card2Labels = new ArrayList<JLabel>();
@@ -52,18 +51,21 @@ public class GameWindow extends javax.swing.JFrame {
         discard.setIcon(new javax.swing.ImageIcon(getClass().getResource("images/b1fv.png")));
         discard.setVisible(true);
         add(discard);
+        //DRAW DISCARD NUMBER
         discardNumber = new JLabel();
         discardNumber.setLocation(550, 355);
         discardNumber.setSize(200,100);
         discardNumber.setVisible(true);
         discardNumber.setFont(new java.awt.Font("Times New Roman", 1, 24));
         add(discardNumber);
+        //DISPLAY ROUND VALUE
         roundDisplay = new JLabel();
         roundDisplay.setLocation(350, 455);
         roundDisplay.setSize(400,100);
         roundDisplay.setVisible(true);
         roundDisplay.setFont(new java.awt.Font("Times New Roman", 1, 24));
         add(roundDisplay);
+        //UPDATE DISPLAY TO GAME
         updateDisplay();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
@@ -136,7 +138,9 @@ public class GameWindow extends javax.swing.JFrame {
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+/////////////////////////////////////////////////////////////////////
+        //GET SELECTED CARDS
+////////////////////////////////////////////////////////////////////
         Player humanPlayer = game.players[0];
         Hand playerHand =humanPlayer.hand;
         ArrayList<Card> playerCards = playerHand.getCards();
@@ -210,7 +214,7 @@ public class GameWindow extends javax.swing.JFrame {
             updateDisplay();
             
 //////////////////////////////////////////////////////////////////////////////
-    //Computer 2
+//Computer 2
 ///////////////////////////////////////////////////////////////////////////////
             numplayed = game.computerPlayerTurn(2);
                         //output results
@@ -234,7 +238,7 @@ public class GameWindow extends javax.swing.JFrame {
             game.round = game.round + 1;
             updateDisplay();
 //////////////////////////////////////////////////////////////////////////////
-    //Computer 3
+//Computer 3
 ///////////////////////////////////////////////////////////////////////////////
             numplayed = game.computerPlayerTurn(3);
                         //output results
@@ -263,7 +267,7 @@ public class GameWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-    //CALL CHEAT BUTTON
+//CALL CHEAT BUTTON
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
