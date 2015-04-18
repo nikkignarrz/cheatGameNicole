@@ -23,7 +23,7 @@ public class Discard {
      * creates an empty discard
     */
     public Discard(){
-        
+        discardCards = new ArrayList<Card>();
     }
     /**
      * return int indicating last player to add cards

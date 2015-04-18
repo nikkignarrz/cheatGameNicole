@@ -4,15 +4,20 @@
  * and open the template in the editor.
  */
     package cheat;
+
+import java.util.ArrayList;
+
 /**
  *
  * @author Patrick
  */
 public class Game {
-    Player[] players;
-    Discard discard;
-    Card[] selectedCards;
-    int round;
+    public Player[] players;
+    public Discard discard;
+    public Card[] selectedCards;
+    public int round;
+    public boolean lastPlayerLied;
+    public int quantityLastPlayed;
     GameWindow gw;
     
     /**
@@ -45,43 +50,7 @@ public class Game {
             tempHand = new Hand(cards);
             players[i] = new Player(name[i], tempHand,isHuman[i]);
         }
- //       loop();
-    }
-    /**
-     * loop until game is won or quit
-     * on each loop execute:
-     *          check win condition
-     *          call playerTurn()
-     *          render()
-     */
-    private void loop(){
-        while(!checkWinCondition()){
-            playerTurn(players[round%4]);
-            render();
-        }
-    }
-    /**
-     * check if player is human
-     * if human call humanPlayerTurn
-     * if computer call computerPlayerTurn
-     * @param player 
-     */
-    public void playerTurn(Player player){
-        if(player.isHuman){
-            humanPlayerTurn(player);
-        }else{
-            computerPlayerTurn(player);
-        }
-    }
-    /**
-     * wait for input from player
-     * check input and do one of the following
-     * callCheat(), selectCards(), or playCards()
-     * then call render()
-     * Repeat these steps until playCards has been selected
-     */
-    public void humanPlayerTurn(Player player){
-        
+        discard = new Discard();
     }
     /**
      * decide whether or not computer player will call cheat
@@ -89,16 +58,29 @@ public class Game {
      * do the decided actions
      * return
      */
-    public void computerPlayerTurn(Player player){
-        
+    public int[] computerPlayerTurn(int player){
+        int[]temp ={0,0};
+        return temp;
     }
     /**
      * check the boolean status of the discard
      * if true add cards to last player to play's hand
      * if false add cards to current player's hand
      */
-    public void callCheat(){
-       
+    public int[] callCheat(){
+        ArrayList<Card> temp = discard.getDiscardCards();
+        if (lastPlayerLied){
+            players[(round-1)%4].hand.addCards(temp);
+            int[] value = {(round-1)%4,temp.size()};
+            discard.discardCards.removeAll(discard.discardCards);
+            return value;
+        }else{
+           players[round%4].hand.addCards(temp);
+           int[] value = {round%4,temp.size()};
+           discard.discardCards.removeAll(discard.discardCards);
+           return value;
+        }
+
     }
     /**
      * add card to the selectedCards array 
@@ -118,11 +100,12 @@ public class Game {
      * create a GameModelView using the data stored in this class
      * use the new GameModelView to call GameWindow's method Update
      */
-    public void render(){
-        
-    }
 
-    private boolean checkWinCondition() {
-        return true;
+    public boolean checkWinCondition() {
+        if(players[(round-1)%4].getHand().size()==0){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

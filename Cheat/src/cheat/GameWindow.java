@@ -7,6 +7,8 @@ package cheat;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -24,17 +26,44 @@ public class GameWindow extends javax.swing.JFrame {
     final int XCARDAREA = 1000;
     final int XCARDSIZE = 71;
     final int YCARDAREA = 550;
+    final long sleepTime = 1000;
     private ArrayList<JLabel> card1Labels;
     private ArrayList<JLabel> card2Labels;
     private ArrayList<JLabel> card3Labels;
+    private JLabel discard;
+    private JLabel discardNumber;
+    private JLabel roundDisplay;
+    private ArrayList<String> log;
+    private String[] roundString = {"Two","Three","Four","Five","Six","Seven",
+                            "Eight","Nine","Ten","Jack","Queen","King","Ace"};
     public GameWindow() {
         cardButtons = new ArrayList<JButton>();
         card1Labels = new ArrayList<JLabel>();
         card2Labels = new ArrayList<JLabel>();
         card3Labels = new ArrayList<JLabel>();
+        log = new ArrayList<String>();
         game = new Game();
         initComponents();
-        displayCards();
+        //DRAW DISCARD
+        discard = new JLabel();
+        discard.setLocation(465, 355);
+        discard.setSize(71,96);
+        discard.setIcon(new javax.swing.ImageIcon(getClass().getResource("images/b1fv.png")));
+        discard.setVisible(true);
+        add(discard);
+        discardNumber = new JLabel();
+        discardNumber.setLocation(550, 355);
+        discardNumber.setSize(200,100);
+        discardNumber.setVisible(true);
+        discardNumber.setFont(new java.awt.Font("Times New Roman", 1, 24));
+        add(discardNumber);
+        roundDisplay = new JLabel();
+        roundDisplay.setLocation(350, 455);
+        roundDisplay.setSize(400,100);
+        roundDisplay.setVisible(true);
+        roundDisplay.setFont(new java.awt.Font("Times New Roman", 1, 24));
+        add(roundDisplay);
+        updateDisplay();
     }
 
     /**
@@ -48,7 +77,8 @@ public class GameWindow extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,24 +96,29 @@ public class GameWindow extends javax.swing.JFrame {
             }
         });
 
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(1000, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
+                .addContainerGap(1034, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -93,14 +128,114 @@ public class GameWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+    //PLAY CARDS BUTTON
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+        Player humanPlayer = game.players[0];
+        Hand playerHand =humanPlayer.hand;
+        ArrayList<Card> playerCards = playerHand.getCards();
+        ArrayList<Card> selectedCards = new ArrayList();
+        for(int i = 0; i < playerCards.size(); i++){
+            if(playerCards.get(i).getSelected()){
+                selectedCards.add(playerCards.get(i));
+            }
+        }
+//////////////////////////////////////////////////////////////////////////////
+    //CHECK PLAYER TURN
+///////////////////////////////////////////////////////////////////////////////
+        if(selectedCards.size() > 4){
+           updateLog("Too Many Cards Selected: \n Select Up To 4 Cards");
+           updateDisplay();
+            return;
+        }else{
+//////////////////////////////////////////////////////////////////////////////
+    //PERFORM PLAYER TURN
+///////////////////////////////////////////////////////////////////////////////
+            game.quantityLastPlayed = selectedCards.size();
+            game.discard.addCardsToDiscard(selectedCards);
+            game.players[0].hand.removeCards(selectedCards);
+            for(int j = 0; j<selectedCards.size(); j++){
+                if(selectedCards.get(j).getValue() != game.round%13){
+                    game.lastPlayerLied = true;
+                    break;
+                }else{
+                    game.lastPlayerLied = false;
+                }
+            }
+            updateLog(game.players[0].getName() + " Played " + 
+                    Integer.toString(selectedCards.size()) + " on " + 
+                    roundString[game.round%13]+" round");
+            game.round = game.round + 1;
+            updateDisplay();
+            //check win condition
+            if(game.checkWinCondition()){
+                gameWon((game.round-1)%4);
+            }
+//////////////////////////////////////////////////////////////////////////////
+    //Computer 1
+///////////////////////////////////////////////////////////////////////////////
+            int[] numplayed;
+            numplayed = game.computerPlayerTurn(1);
+            updateLog(game.players[1].getName() + " Played " + 
+                numplayed[0] + " on " + 
+                roundString[game.round%13]+" round");
+            game.round = game.round + 1;
+            updateDisplay();
+            
+//////////////////////////////////////////////////////////////////////////////
+    //Computer 2
+///////////////////////////////////////////////////////////////////////////////
+            numplayed = game.computerPlayerTurn(2);
+            updateLog(game.players[2].getName() + " Played " + 
+                numplayed[0] + " on " + 
+                roundString[game.round%13]+" round");
+            game.round = game.round + 1;
+            updateDisplay();
+//////////////////////////////////////////////////////////////////////////////
+    //Computer 3
+///////////////////////////////////////////////////////////////////////////////
+            numplayed = game.computerPlayerTurn(3);
+            updateLog(game.players[3].getName() + " Played " + 
+                numplayed[0] + " on " + 
+                roundString[game.round%13]+" round");
+            game.round = game.round + 1;
+            updateDisplay();
+        
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
-
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+    //CALL CHEAT BUTTON
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        if(game.discard.discardCards.isEmpty()){
+            updateLog("Cannot Call Cheat: ");
+            updateLog("Discard is Empty");
+            return;
+        }else{
+            int[] result = game.callCheat();
+            updateLog(game.players[0].name + " Called Cheat!");
+            if (result[0] == 0){
+                updateLog(game.players[0].name + " Was Wrong! ");
+                updateLog(game.players[0].name + " Recieved: " + result[1] + "Cards");
+            }else{
+                updateLog(game.players[0].name + " Was Right! ");
+                updateLog(game.players[result[0]].name + " Recieved: " + result[1] + "Cards");
+            }    
+        }
+        updateDisplay();
     }//GEN-LAST:event_jButton2ActionPerformed
-
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+    //SELECT CARDS BUTTON
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
     private void cardButtonActionPerformed(java.awt.event.ActionEvent evt) {
         //GET SOURVE
         Object temp =evt.getSource();
@@ -114,55 +249,24 @@ public class GameWindow extends javax.swing.JFrame {
                 //SET CARD BOOLEAN TO SELECTED
                game.players[0].hand.getCards().get(i).setSelected(!playerCards.get(i).getSelected());
                //REDISPLAY CARDS
-               displayCards();
+               updateDisplay();
                revalidate();
                repaint();
                return;
             }
         }
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GameWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GameWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GameWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GameWindow().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
-    private void displayCards() {
+    private void updateDisplay() {
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
         //ERASE OLD CARDS
         //REMOVE BUTTONS FROM INTERFACE
         for (int j = 0; j < cardButtons.size(); j++){
@@ -190,8 +294,10 @@ public class GameWindow extends javax.swing.JFrame {
         }
         //REMOVE LABELS FROM ARRAYLIST
         card3Labels.removeAll(card3Labels);
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
         //DISPLAY PLAYER HAND:
-        
+       
         //GET PLAYER CARDS TO DRAW
         Player player = game.players[0];
         Hand hand =player.hand;
@@ -228,6 +334,8 @@ public class GameWindow extends javax.swing.JFrame {
             cardButtons.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource(cards.get(i).getImageValue())));
             add(cardButtons.get(i));
         }
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
         //DISPLAY COMPUTERS 2 HAND
         
         player = game.players[2];
@@ -253,7 +361,8 @@ public class GameWindow extends javax.swing.JFrame {
             card2Labels.get(i).setVisible(true);
             add(card2Labels.get(i));
         }
-        
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
         //DRAW COMPUTER 1 CARDS
         player = game.players[1];
         hand =player.hand;
@@ -280,8 +389,10 @@ public class GameWindow extends javax.swing.JFrame {
             card1Labels.get(i).setVisible(true);
             add(card1Labels.get(i));
         }
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
         //DRAW COMPUTER 3 CARDS
-        player = game.players[1];
+        player = game.players[3];
         hand =player.hand;
         cards = hand.getCards();
         
@@ -294,7 +405,7 @@ public class GameWindow extends javax.swing.JFrame {
             yCardStart = 10;
         }
         
-        //CREATE BUTTONS FOR PLAYER CARDS
+        //CREATE LABELS FOR PLAYER CARDS
         for(int i = 0; i < cards.size(); i++){
             card3Labels.add(i, new JLabel());
             //SET SETTINGS FOR BUTTON AND DISPLAY
@@ -304,5 +415,20 @@ public class GameWindow extends javax.swing.JFrame {
             card3Labels.get(i).setVisible(true);
             add(card3Labels.get(i));
         }
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+        //UPDATE ROUND NUMBER
+        discardNumber.setText("DISCARD SIZE:\n" + Integer.toString(game.discard.discardSize()));
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+        //UPDATE ROUND DISPLAY
+        roundDisplay.setText("VALUE TO PLAY:" + roundString[game.round%13]);
+    }
+    private void updateLog(String s){
+        jTextArea1.append("\n" + s);
+        
+    }
+    private void gameWon(int i){
+        updateLog(game.players[i] + "has won the game!");
     }
 }

@@ -26,7 +26,7 @@ public class Hand {
      * creates an empty hand
     */
     public Hand(){
-        
+        this.cards = new ArrayList<>();
     }
     /**
      * returns the cards in the hand
@@ -39,14 +39,14 @@ public class Hand {
      * remove the cards in removeCards from cards in Hand
      * @param removeCards 
      */
-    public void removeCards(Card[] removeCards){
-        
+    public void removeCards(ArrayList<Card> removeCards){
+        cards.removeAll(removeCards);
     }
     /**
      * add cards in addCards to cards in Hand
      */
-    public void addCards(Card[] addCards){
-        
+    public void addCards(ArrayList<Card> addCards){
+        cards.addAll(addCards);
     }
     /**
      * 
