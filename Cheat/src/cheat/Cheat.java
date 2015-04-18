@@ -15,7 +15,7 @@ public class Cheat {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new GameWindow().setVisible(true);
+        new Menu().setVisible(true);
     }
     
 }

@@ -82,25 +82,6 @@ public class Game {
         }
 
     }
-    /**
-     * add card to the selectedCards array 
-     * or remove them if they are already there
-     */
-    public void selectCards(Card card){
-        
-    }
-    /**
-     * add cards in selectedCards to discard
-     * remove them from current player's hand
-     */
-    public void playCards(){
-        
-    }
-    /**
-     * create a GameModelView using the data stored in this class
-     * use the new GameModelView to call GameWindow's method Update
-     */
-
     public boolean checkWinCondition() {
         if(players[(round-1)%4].getHand().size()==0){
             return true;

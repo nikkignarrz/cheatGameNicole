@@ -430,5 +430,7 @@ public class GameWindow extends javax.swing.JFrame {
     }
     private void gameWon(int i){
         updateLog(game.players[i] + "has won the game!");
+        this.dispose();
+        new WinScreen(game.players[i].getName()).setVisible(true);
     }
 }
