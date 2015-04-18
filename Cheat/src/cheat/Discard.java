@@ -50,6 +50,9 @@ public class Discard {
      * @param cards
     */
     public void addCardsToDiscard(ArrayList<Card> cards){
+        for(int i = 0; i<cards.size(); i++){
+            cards.get(i).setSelected(false);
+        }
         discardCards.addAll(cards);
     }
     /**

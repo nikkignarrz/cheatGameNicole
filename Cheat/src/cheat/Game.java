@@ -6,6 +6,7 @@
     package cheat;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -17,16 +18,10 @@ public class Game {
     public int round;
     public boolean lastPlayerLied;
     public int quantityLastPlayed;
-    GameWindow gw;
-    
-    /**
-     * Gets names for each player       
-     * Creates 4 hands from a full set of cards         .
-     * Creates 4 players and stores them in players     .
-     * sets discard to empty
-     * starts game loop
-     */
+    Random r;
+   
     public Game(){
+        r = new Random();
         players = new Player[4];
         //create deck for game
         Deck deck = new Deck();
@@ -60,6 +55,9 @@ public class Game {
     public int[] computerPlayerTurn(int player){
         ////////////////////////////////////////////////////////////
         //DECIDE TO CALL CHEAT
+        //CALL CHEAT IF:
+        // LAST PLAYER HAS NO CARDS LEFT
+        // OR AMOUNT LAST PLAYER PLAYED + AMOUNT I HAVE OF SAME VALUE >4 
         ///////////////////////////////////////////////////////////
         int quantityLastPlay = 0;
         int cheatReturnValue[];
@@ -68,8 +66,11 @@ public class Game {
                 quantityLastPlay++;
             }
         }
+        int r = this.r.nextInt(100);
+        System.out.println(r);
         if(quantityLastPlay+quantityLastPlayed >4 || 
-                players[(round-1)%4].getHand().cards.size() == 0){ 
+            players[(round-1)%4].getHand().cards.size() == 0 ||
+            r>=95){ 
             cheatReturnValue =callCheat();
         }else{
             cheatReturnValue = new int[2];
@@ -80,7 +81,24 @@ public class Game {
         //SELECT CARDS TO PLAY
         //////////////////////////////////////////////////////////
         ArrayList<Card> selectedCards = new ArrayList();
-        selectedCards.add(players[player].getHand().cards.get(0));
+        for (int i = 0; i < players[player].getHand().getCards().size(); i++){
+            if(players[player].getHand().cards.get(i).getValue() == round%13){
+                selectedCards.add(players[player].getHand().cards.get(i));
+            }
+        }
+        if(this.r.nextInt(100)>75){
+            for(int i = 0; i < players[player].getHand().getCards().size(); i++){
+                if(selectedCards.contains(players[player].getHand().getCards().get(i))){
+                    
+                }
+            }
+        }
+        if(selectedCards.isEmpty()){
+            selectedCards.add(players[player].getHand().cards.get(0));
+            if(this.r.nextInt(100)>75&& players[player].hand.size() ==2){            
+               selectedCards.add(players[player].getHand().cards.get(1));
+            }
+        }
         discard.addCardsToDiscard(selectedCards);
         players[player].hand.removeCards(selectedCards);
         ////////////////////////////////////////////////////////////
@@ -98,11 +116,7 @@ public class Game {
         int[]temp ={selectedCards.size(),cheatReturnValue[0],cheatReturnValue[1]};
         return temp;
     }
-    /**
-     * check the boolean status of the discard
-     * if true add cards to last player to play's hand
-     * if false add cards to current player's hand
-     */
+
     public int[] callCheat(){
         ArrayList<Card> temp = discard.getDiscardCards();
         if (lastPlayerLied){

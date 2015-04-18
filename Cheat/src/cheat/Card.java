@@ -9,7 +9,7 @@ package cheat;
  *
  * @author Patrick
  */
-public class Card {
+public class Card implements Comparable{
     private String suit;
     private int value;
     private String imageValue;
@@ -70,4 +70,16 @@ public class Card {
         public void setSelected(boolean selected) {
         this.selected = selected;
     }
+
+    @Override
+    public int compareTo(Object t) {
+        if(this.value == ((Card)t).getValue()){
+            return 0;
+        }else if (this.value > ((Card)t).getValue()){
+            return 1;
+        }else{
+            return -1;
+        }
+    }
+    
 }

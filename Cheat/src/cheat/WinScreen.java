@@ -17,6 +17,7 @@ public class WinScreen extends javax.swing.JFrame {
     public WinScreen(String s) {
         initComponents();
         jLabel1.setText(s + "Has Won The Game!");
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     /**

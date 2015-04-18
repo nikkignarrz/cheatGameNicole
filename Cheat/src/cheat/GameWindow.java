@@ -7,6 +7,7 @@ package cheat;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -64,6 +65,7 @@ public class GameWindow extends javax.swing.JFrame {
         roundDisplay.setFont(new java.awt.Font("Times New Roman", 1, 24));
         add(roundDisplay);
         updateDisplay();
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     /**
@@ -176,6 +178,7 @@ public class GameWindow extends javax.swing.JFrame {
             //check win condition
             if(game.checkWinCondition()){
                 gameWon((game.round-1)%4);
+                return;
             }
             game.round = game.round + 1;
 //////////////////////////////////////////////////////////////////////////////
@@ -201,6 +204,7 @@ public class GameWindow extends javax.swing.JFrame {
             //end turn
             if(game.checkWinCondition()){
                 gameWon((game.round-1)%4);
+                return;
             }
             game.round = game.round + 1;
             updateDisplay();
@@ -225,6 +229,7 @@ public class GameWindow extends javax.swing.JFrame {
                 roundString[game.round%13]+" round");
            if(game.checkWinCondition()){
                 gameWon((game.round-1)%4);
+                return;
             }
             game.round = game.round + 1;
             updateDisplay();
@@ -234,7 +239,7 @@ public class GameWindow extends javax.swing.JFrame {
             numplayed = game.computerPlayerTurn(3);
                         //output results
             if(numplayed[1] != -1){
-                updateLog(game.players[2].name + " Called Cheat!");
+                updateLog(game.players[3].name + " Called Cheat!");
                 if (numplayed[1] == 3){
                     updateLog(game.players[3].name + " Was Wrong! ");
                     updateLog(game.players[3].name + " Recieved: " + numplayed[2] + " Cards");
@@ -248,6 +253,7 @@ public class GameWindow extends javax.swing.JFrame {
                 roundString[game.round%13]+" round");
             if(game.checkWinCondition()){
                 gameWon((game.round-1)%4);
+                return;
             }
             game.round = game.round + 1;
             updateDisplay();
@@ -349,7 +355,7 @@ public class GameWindow extends javax.swing.JFrame {
         Player player = game.players[0];
         Hand hand =player.hand;
         ArrayList<Card> cards = hand.getCards();
-        
+        Collections.sort(cards);
         //SET XCARD START AND XCARD SPACING
         int xCardStart;
         int xCardSpace;
