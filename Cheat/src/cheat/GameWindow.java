@@ -156,9 +156,10 @@ public class GameWindow extends javax.swing.JFrame {
     //PERFORM PLAYER TURN
 ///////////////////////////////////////////////////////////////////////////////
             game.quantityLastPlayed = selectedCards.size();
-            game.discard.addCardsToDiscard(selectedCards);
+
             game.players[0].hand.removeCards(selectedCards);
             for(int j = 0; j<selectedCards.size(); j++){
+                selectedCards.get(j).setSelected(false);
                 if(selectedCards.get(j).getValue() != game.round%13){
                     game.lastPlayerLied = true;
                     break;
@@ -166,23 +167,41 @@ public class GameWindow extends javax.swing.JFrame {
                     game.lastPlayerLied = false;
                 }
             }
+            game.discard.addCardsToDiscard(selectedCards);
+            game.quantityLastPlayed = selectedCards.size();
             updateLog(game.players[0].getName() + " Played " + 
                     Integer.toString(selectedCards.size()) + " on " + 
                     roundString[game.round%13]+" round");
-            game.round = game.round + 1;
             updateDisplay();
             //check win condition
             if(game.checkWinCondition()){
                 gameWon((game.round-1)%4);
             }
+            game.round = game.round + 1;
 //////////////////////////////////////////////////////////////////////////////
     //Computer 1
 ///////////////////////////////////////////////////////////////////////////////
             int[] numplayed;
+            //perform turn
             numplayed = game.computerPlayerTurn(1);
+            //output results
+            if(numplayed[1] != -1){
+                updateLog(game.players[1].name + " Called Cheat!");
+                if (numplayed[1] == 1){
+                    updateLog(game.players[1].name + " Was Wrong! ");
+                    updateLog(game.players[1].name + " Recieved: " + numplayed[2] + " Cards");
+                }else{
+                    updateLog(game.players[1].name + " Was Right! ");
+                    updateLog(game.players[numplayed[1]].name + " Recieved: " + numplayed[2] + " Cards");
+                }
+            }
             updateLog(game.players[1].getName() + " Played " + 
-                numplayed[0] + " on " + 
-                roundString[game.round%13]+" round");
+            numplayed[0] + " on " + 
+            roundString[game.round%13]+" round");
+            //end turn
+            if(game.checkWinCondition()){
+                gameWon((game.round-1)%4);
+            }
             game.round = game.round + 1;
             updateDisplay();
             
@@ -190,18 +209,46 @@ public class GameWindow extends javax.swing.JFrame {
     //Computer 2
 ///////////////////////////////////////////////////////////////////////////////
             numplayed = game.computerPlayerTurn(2);
+                        //output results
+            if(numplayed[1] != -1){
+                updateLog(game.players[2].name + " Called Cheat!");
+                if (numplayed[1] == 2){
+                    updateLog(game.players[2].name + " Was Wrong! ");
+                    updateLog(game.players[2].name + " Recieved: " + numplayed[2] + " Cards");
+                }else{
+                    updateLog(game.players[2].name + " Was Right! ");
+                    updateLog(game.players[numplayed[1]].name + " Recieved: " + numplayed[2] + " Cards");
+                }
+            }
             updateLog(game.players[2].getName() + " Played " + 
                 numplayed[0] + " on " + 
                 roundString[game.round%13]+" round");
+           if(game.checkWinCondition()){
+                gameWon((game.round-1)%4);
+            }
             game.round = game.round + 1;
             updateDisplay();
 //////////////////////////////////////////////////////////////////////////////
     //Computer 3
 ///////////////////////////////////////////////////////////////////////////////
             numplayed = game.computerPlayerTurn(3);
+                        //output results
+            if(numplayed[1] != -1){
+                updateLog(game.players[2].name + " Called Cheat!");
+                if (numplayed[1] == 3){
+                    updateLog(game.players[3].name + " Was Wrong! ");
+                    updateLog(game.players[3].name + " Recieved: " + numplayed[2] + " Cards");
+                }else{
+                    updateLog(game.players[3].name + " Was Right! ");
+                    updateLog(game.players[numplayed[1]].name + " Recieved: " + numplayed[2] + " Cards");
+                }
+            }
             updateLog(game.players[3].getName() + " Played " + 
                 numplayed[0] + " on " + 
                 roundString[game.round%13]+" round");
+            if(game.checkWinCondition()){
+                gameWon((game.round-1)%4);
+            }
             game.round = game.round + 1;
             updateDisplay();
         

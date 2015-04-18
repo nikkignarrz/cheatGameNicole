@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class Game {
     public Player[] players;
     public Discard discard;
-    public Card[] selectedCards;
     public int round;
     public boolean lastPlayerLied;
     public int quantityLastPlayed;
@@ -59,7 +58,44 @@ public class Game {
      * return
      */
     public int[] computerPlayerTurn(int player){
-        int[]temp ={0,0};
+        ////////////////////////////////////////////////////////////
+        //DECIDE TO CALL CHEAT
+        ///////////////////////////////////////////////////////////
+        int quantityLastPlay = 0;
+        int cheatReturnValue[];
+        for(int i =0; i < players[player].hand.size(); i++){
+            if(players[player].hand.cards.get(i).getValue() == (round-1)%13 ){
+                quantityLastPlay++;
+            }
+        }
+        if(quantityLastPlay+quantityLastPlayed >4 || 
+                players[(round-1)%4].getHand().cards.size() == 0){ 
+            cheatReturnValue =callCheat();
+        }else{
+            cheatReturnValue = new int[2];
+            cheatReturnValue[0] = -1;
+            cheatReturnValue[1] = -1;
+        }
+        ////////////////////////////////////////////////////////////
+        //SELECT CARDS TO PLAY
+        //////////////////////////////////////////////////////////
+        ArrayList<Card> selectedCards = new ArrayList();
+        selectedCards.add(players[player].getHand().cards.get(0));
+        discard.addCardsToDiscard(selectedCards);
+        players[player].hand.removeCards(selectedCards);
+        ////////////////////////////////////////////////////////////
+        //CHECK IF LYING
+        ////////////////////////////////////////////////////////////
+        for(int j = 0; j<selectedCards.size(); j++){
+                if(selectedCards.get(j).getValue() != round%13){
+                    lastPlayerLied = true;
+                    break;
+                }else{
+                    lastPlayerLied = false;
+                }
+        }
+        
+        int[]temp ={selectedCards.size(),cheatReturnValue[0],cheatReturnValue[1]};
         return temp;
     }
     /**
@@ -83,6 +119,9 @@ public class Game {
 
     }
     public boolean checkWinCondition() {
+        if(round ==0){
+            return false;
+        }
         if(players[(round-1)%4].getHand().size()==0){
             return true;
         }else{
