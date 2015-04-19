@@ -55,6 +55,11 @@ public class Menu extends javax.swing.JFrame {
         jButton3.setBounds(140, 270, 170, 50);
 
         jButton2.setText("Display Instructions");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jLayeredPane1.add(jButton2);
         jButton2.setBounds(140, 190, 170, 50);
 
@@ -94,6 +99,11 @@ public class Menu extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        new InstructionsPage().setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
